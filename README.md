@@ -1,5 +1,14 @@
 # hello_cloudwatch
 
+#### How to run
+
+Deploy Lambda
+```
+$ cd qilin-metrics-fedder
+$ mvn package
+$ sls deploy
+```
+
 #### CloudWatch 是什么？我们为什么要使用CloudWatch？
 
 Amazon CloudWatch是AWS的一个全托管服务，可以用来监控AWS资源和在AWS中运行的应用程序。
