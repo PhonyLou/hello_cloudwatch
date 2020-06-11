@@ -2,11 +2,16 @@
 
 #### How to run
 
-Deploy Lambda
+Make artifact
 ```
 $ cd qilin-metrics-fedder
 $ mvn package
-$ sls deploy
+```
+
+Upload to S3
+```
+$ sh create-s3-bucket.sh
+$ sh upload-s3.sh
 ```
 
 #### CloudWatch 是什么？我们为什么要使用CloudWatch？
