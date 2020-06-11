@@ -14,6 +14,11 @@ $ sh create-s3-bucket.sh
 $ sh upload-s3.sh
 ```
 
+Deploy Lambda
+```
+$ aws cloudformation create-stack --stack-name qilin-metrics-stack --template-body file://cloudfomation-p1.yml
+```
+
 #### CloudWatch 是什么？我们为什么要使用CloudWatch？
 
 Amazon CloudWatch是AWS的一个全托管服务，可以用来监控AWS资源和在AWS中运行的应用程序。
