@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "This template will deploy this job."
+
+Resources:
+    QilinFuncLogGroup:
+        Type: AWS::Logs::LogGroup
+        Properties:
+            LogGroupName: "/aws/lambda/qilin-metrics-feeder-p2"
+    
+    QilinMetricsFunction:
+        Type: AWS::Lambda::Function
+        DependsOn: QilinFuncLogGroup
+        Properties:
+            Handler: com.serverless.Handler
+            FunctionName: qilin-metrics-feeder-p2
+            Role: arn:aws:iam::494526681395:role/for-aws-training-2
+            Code:
+                S3Bucket: qilin-metrics-feeder
+                S3Key: qilin-metrics-feeder.jar
+            Runtime: java8
+            Timeout: 30
+            MemorySize: 512
+    
+    RuleSchedule:
+        Type: AWS::Events::Rule
+        Properties:
+            ScheduleExpression: cron(0/1 * * * ? *)
+            State: ENABLED
+            Targets:
+                - Arn:
+                    Fn::GetAtt:
+                        - QilinMetricsFunction
+                        - Arn
+                  Id: qilinSechedule2
+    
+    SchedulePermission:
+        Type: AWS::Lambda::Permission
+        Properties:
+            FunctionName: 
+                Fn::GetAtt:
+                    - QilinMetricsFunction
+                    - Arn
+            Action: lambda:InvokeFunction
+            Principal: events.amazonaws.com
+            SourceArn:
+              Fn::GetAtt:
+                - RuleSchedule
+                - Arn
+            
+    MetricAlarm:
+        Type: AWS::CloudWatch::Alarm
+        Properties:
+            AlarmName: QilinAlarm2
+            Namespace: Qilin/Metrics
+            MetricName: qilin-filted-metrics
+            ComparisonOperator: GreaterThanThreshold
+            Statistic: SampleCount
+            Threshold: 2.0
+            EvaluationPeriods: 1
+            Period: 30000
+            AlarmActions:
+                - !Ref NotificationTopic
+    
+    NotificationTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            TopicName: QilinNotificationTopic2
+    
+    EmailSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Endpoint: phonylou@qq.com
+            Protocol: email
+            TopicArn: !Ref NotificationTopic
+    
+    SNSPolicy:
+        Type: AWS::SNS::TopicPolicy
+        Properties:
+            Topics:
+                - !Ref NotificationTopic
+            PolicyDocument:
+                Id: MyTopicPolicy
+                Version: '2012-10-17'
+                Statement:
+                    -   Sid: allow-alarm-subscription
+                        Effect: Allow
+                        Principal: '*'
+                        Action:
+                            - sns:Subscribe
+                            - SNS:Publish
+                        Resource: '*'
+
+    QilinMetricFilter:
+        Type: AWS::Logs::MetricFilter
+        DependsOn: QilinMetricsFunction
+        Properties:
+            LogGroupName: /aws/lambda/qilin-metrics-feeder-p2
+            FilterPattern: "[flag=START, request, id, version, tag]"
+            MetricTransformations:
+                - MetricValue: 1
+                  DefaultValue: 0
+                  MetricNamespace: Qilin/Metrics
+                  MetricName: qilin-filted-metrics

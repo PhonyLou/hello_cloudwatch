@@ -14,12 +14,18 @@ $ sh create-s3-bucket.sh
 $ sh upload-s3.sh
 ```
 
-Deploy Lambda
+Deploy Practice 1
 ```
 $ aws cloudformation create-stack --stack-name qilin-metrics-stack --template-body file://cloudfomation-p1.yml
 
 $ aws cloudformation update-stack --stack-name qilin-metrics-stack --template-body file://cloudfomation-p1.yml
 ```
+
+Deploy Practice 2
+```
+$ aws cloudformation create-stack --stack-name qilin-metrics-stack-p2 --template-body file://cloudfomation-p2.yml
+
+$ aws cloudformation update-stack --stack-name qilin-metrics-stack-p2 --template-body file://cloudfomation-p2.yml
 ```
 
 #### CloudWatch 是什么？我们为什么要使用CloudWatch？
