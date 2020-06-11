@@ -54,7 +54,7 @@ Resources:
             Statistic: Maximum
             Threshold: 5.0
             EvaluationPeriods: 1
-            Period: 300
+            Period: 30000
             AlarmActions:
                 - !Ref NotificationTopic
     
