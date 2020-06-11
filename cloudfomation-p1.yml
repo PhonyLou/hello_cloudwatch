@@ -47,8 +47,11 @@ Resources:
             AlarmName: QilinAlarm
             Namespace: Qilin/Metrics
             MetricName: Lazy_Metrics
-            ComparisonOperator: LessThanOrEqualToThreshold
-            Statistic: Average
+            Dimensions: 
+                - Name: FeederInstance
+                  Value: qilin-metrics-feeder
+            ComparisonOperator: GreaterThanThreshold
+            Statistic: Maximum
             Threshold: 5.0
             EvaluationPeriods: 1
             Period: 300
