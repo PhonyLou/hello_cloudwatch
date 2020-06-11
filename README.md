@@ -17,6 +17,9 @@ $ sh upload-s3.sh
 Deploy Lambda
 ```
 $ aws cloudformation create-stack --stack-name qilin-metrics-stack --template-body file://cloudfomation-p1.yml
+
+$ aws cloudformation update-stack --stack-name qilin-metrics-stack --template-body file://cloudfomation-p1.yml
+```
 ```
 
 #### CloudWatch 是什么？我们为什么要使用CloudWatch？
